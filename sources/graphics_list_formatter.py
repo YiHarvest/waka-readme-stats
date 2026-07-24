@@ -107,7 +107,10 @@ async def make_commit_day_time_list(time_zone: str, repositories: Dict, commit_d
         dt_names = [f"{DAY_TIME_EMOJI[i]} {FM.t(DAY_TIME_NAMES[i])}" for i in range(len(day_times))]
         dt_texts = [f"{day_time} commits" for day_time in day_times]
         dt_percents = [0 if sum_day == 0 else round((day_time / sum_day) * 100, 2) for day_time in day_times]
-        title = FM.t("I am an Early") if sum(day_times[0:2]) >= sum(day_times[2:4]) else FM.t("I am a Night")
+        # Find the time period with most commits and show corresponding label
+        max_idx = day_times.index(max(day_times))
+        time_labels = ["I am a Morning", "I am a Daytime", "I am an Evening", "I am a Night"]
+        title = FM.t(time_labels[max_idx])
         stats += f"**{title}** \n\n```text\n{make_list(names=dt_names, texts=dt_texts, percents=dt_percents, top_num=7, sort=False)}\n```\n"
 
     if EM.SHOW_DAYS_OF_WEEK:
